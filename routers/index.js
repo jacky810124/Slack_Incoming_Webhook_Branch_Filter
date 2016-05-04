@@ -12,6 +12,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
 
+    //Branch name equal master
     if (req.body.ref.split('/')[2] === 'master') {
 
       var messageBody = {
@@ -19,25 +20,25 @@ router.post('/', function(req, res) {
               "fallback": req.body.user_name + ' ' + req.body.event_name + 'ed to branch <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
               "pretext": req.body.user_name + ' ' + req.body.event_name + 'ed to branch <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
               "color": "#333c47",
-              // "fields": [{
-              //     "title": "Notes",
-              //     "value": "This is much easier than I thought it would be.",
-              //     "short": false
-              // }]
               "fields": []
           }]
       }
 
-      req.body.commits.forEach(function(item) {
+      req.body.commits.forEach(function(item, index) {
 
-        messageBody.attachments[0].fields.push({ value: "<" + item.url + "|" + String(item.id).substring(0, 6) + "> : " + item.message })
-        messageBody.attachments[0].fields.push({ value: "-" + item.author.name })
-        messageBody.attachments[0].fields.push({ value: "---" })
+        messageBody.attachments[0].fields.push({ value: '\n-' })
+        messageBody.attachments[0].fields.push({ value: "<" + item.url + "|" + String(item.id).substring(0, 6) + "> : " + item.message, short: true })
+        messageBody.attachments[0].fields.push({ value: "author: " + item.author.name })
+
+        if(req.body.commits.length - 1 == index) {
+
+          messageBody.attachments[0].fields.push({ value: '\n-' })
+        }
       })
 
       request({
         method: 'POST',
-        url: 'https://hooks.slack.com/services/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',
+        url: '${YOUR_SLACK_INCOMING_WEBHOOK_URL}',
         json: messageBody
       }, function(error, response, body) {
 
