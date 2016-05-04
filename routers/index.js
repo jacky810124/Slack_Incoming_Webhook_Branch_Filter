@@ -14,8 +14,8 @@ router.post('/', function(req, res) {
 
     var messageBody = {
         "attachments": [{
-            "fallback": "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
-            "pretext": "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+            "fallback": req.body.user_name + req.body.event_name + "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+            "pretext": req.body.user_name + req.body.event_name + "New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
             "color": "#fc6d26",
             "fields": [{
                 "title": "Notes",
@@ -24,33 +24,21 @@ router.post('/', function(req, res) {
             }]
         }]
     }
-    // if (req.body.ref === 'refs/heads/master') {
-    //
-    //   request.post('https://hooks.slack.com/services/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', {
-    //       text: req.body.ref
-    //   })
-    // } else {
-    //
-    //     request.post('https://hooks.slack.com/services/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', {
-    //         text: req.body.ref
-    //     })
-    // }
 
-    console.log(req.body);
-    var message = req.body.ref;
+    var message = {}
+
+    if (req.body.ref.split('/')[2] === 'master') {
+
+      message = messageBody
+    } else {
+
+        message.text = req.body.ref
+    }
 
     request({
       method: 'POST',
-      // url: 'http://localhost:8080/message',
       url: 'https://hooks.slack.com/services/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',
-      json: messageBody,
-      // multipart: [
-      //   {
-      //     'content-type': 'application/json',
-      //     'Host': 'hooks.slack.com',
-      //     'Cache-Control': 'no-cache',
-      //   }
-      // ]
+      json: message
     }, function(error, response, body) {
 
       if(error) {
