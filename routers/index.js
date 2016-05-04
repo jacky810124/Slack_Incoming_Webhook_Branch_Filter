@@ -12,15 +12,13 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
 
-    var message = {}
-
     if (req.body.ref.split('/')[2] === 'master') {
 
       var messageBody = {
           "attachments": [{
-              "fallback": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
-              "pretext": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
-              "color": "#fc6d26",
+              "fallback": req.body.user_name + ' ' + req.body.event_name + 'ed to branch <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
+              "pretext": req.body.user_name + ' ' + req.body.event_name + 'ed to branch <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
+              "color": "#333c47",
               // "fields": [{
               //     "title": "Notes",
               //     "value": "This is much easier than I thought it would be.",
@@ -37,31 +35,23 @@ router.post('/', function(req, res) {
         messageBody.attachments[0].fields.push({ value: "---" })
       })
 
-      console.log(messageBody.attachments[0].fields);
+      request({
+        method: 'POST',
+        url: 'https://hooks.slack.com/services/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',
+        json: messageBody
+      }, function(error, response, body) {
 
-      message = messageBody
-    } else {
+        if(error) {
 
-        message.text = req.body.ref
+          console.log(error);
+        } else {
+
+          console.log(body);
+        }
+      })
     }
 
-    request({
-      method: 'POST',
-      url: 'https://hooks.slack.com/services/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',
-      json: message
-    }, function(error, response, body) {
-
-      if(error) {
-
-        console.log(error);
-      } else {
-
-        console.log(body);
-      }
-    })
-
     res.json({})
-
 });
 
 module.exports = router;
