@@ -32,13 +32,12 @@ router.post('/', function(req, res) {
 
       req.body.commits.forEach(function(item) {
 
-        var obj = {}
-
-        item.title = "<" + item.url + "|" + String(item.id).substring(0, 6) + ">: " + item.message
-        item.value = "author: " + item.author.name
-
-        messageBody.attachments[0].fields.push(obj)
+        messageBody.attachments[0].fields.push({ value: "<" + item.url + "|" + String(item.id).substring(0, 6) + "> : " + item.message })
+        messageBody.attachments[0].fields.push({ value: "-" + item.author.name })
+        messageBody.attachments[0].fields.push({ value: "---" })
       })
+
+      console.log(messageBody.attachments[0].fields);
 
       message = messageBody
     } else {
@@ -57,7 +56,7 @@ router.post('/', function(req, res) {
         console.log(error);
       } else {
 
-        console.log(response);
+        console.log(body);
       }
     })
 
