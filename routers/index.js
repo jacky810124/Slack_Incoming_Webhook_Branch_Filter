@@ -17,11 +17,12 @@ router.post('/', function(req, res) {
             "fallback": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
             "pretext": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
             "color": "#fc6d26",
-            "fields": [{
-                "title": "Notes",
-                "value": "This is much easier than I thought it would be.",
-                "short": false
-            }]
+            // "fields": [{
+            //     "title": "Notes",
+            //     "value": "This is much easier than I thought it would be.",
+            //     "short": false
+            // }]
+            "fields": []
         }]
     }
 
@@ -30,6 +31,16 @@ router.post('/', function(req, res) {
     if (req.body.ref.split('/')[2] === 'master') {
 
       message = messageBody
+
+      req.body.commits.forEach(function(item) {
+
+        var obj = {}
+
+        item.title = "<" + item.url + "|" + String(item.id).substring(0, 6) + ">: " + item.message
+        item.value = "author: " + item.author.name
+
+        message.fields.push(obj)
+      })
     } else {
 
         message.text = req.body.ref
