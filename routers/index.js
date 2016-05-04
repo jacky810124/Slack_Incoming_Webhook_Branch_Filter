@@ -12,25 +12,23 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
 
-    var messageBody = {
-        "attachments": [{
-            "fallback": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
-            "pretext": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
-            "color": "#fc6d26",
-            // "fields": [{
-            //     "title": "Notes",
-            //     "value": "This is much easier than I thought it would be.",
-            //     "short": false
-            // }]
-            "fields": []
-        }]
-    }
-
     var message = {}
 
     if (req.body.ref.split('/')[2] === 'master') {
 
-      message = messageBody
+      var messageBody = {
+          "attachments": [{
+              "fallback": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
+              "pretext": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
+              "color": "#fc6d26",
+              // "fields": [{
+              //     "title": "Notes",
+              //     "value": "This is much easier than I thought it would be.",
+              //     "short": false
+              // }]
+              "fields": []
+          }]
+      }
 
       req.body.commits.forEach(function(item) {
 
@@ -39,8 +37,10 @@ router.post('/', function(req, res) {
         item.title = "<" + item.url + "|" + String(item.id).substring(0, 6) + ">: " + item.message
         item.value = "author: " + item.author.name
 
-        message.fields.push(obj)
+        messageBody.attachments[0].fields.push(obj)
       })
+
+      message = messageBody
     } else {
 
         message.text = req.body.ref
