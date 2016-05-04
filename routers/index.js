@@ -14,8 +14,8 @@ router.post('/', function(req, res) {
 
     var messageBody = {
         "attachments": [{
-            "fallback": req.body.user_name + " " + req.body.event_name + " <" + req.body.project.web_url + "/commits/req.body.ref.split('/')[2]|req.body.ref.split('/')[2]> of <" + req.body.project.web_url + "|" + req.body.project.name + ">",
-            "pretext": req.body.user_name + " " + req.body.event_name + " <" + req.body.project.web_url + "/commits/req.body.ref.split('/')[2]|req.body.ref.split('/')[2]> of <" + req.body.project.web_url + "|" + req.body.project.name + ">",
+            "fallback": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
+            "pretext": req.body.user_name + ' ' + req.body.event_name + ' <' + req.body.project.web_url + '/commits/' + req.body.ref.split('/')[2] + '|' + req.body.ref.split('/')[2] + '> of <' + req.body.project.web_url + '|' + req.body.project.name + '>',
             "color": "#fc6d26",
             "fields": [{
                 "title": "Notes",
